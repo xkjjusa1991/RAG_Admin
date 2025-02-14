@@ -1,0 +1,56 @@
+from typing import List
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+class Settings(BaseSettings):
+    # 基本配置
+    PROJECT_NAME: str = "RAG Admin"
+    VERSION: str = "1.0.0"
+    DESCRIPTION: str = "RAG Admin API"
+    API_V1_STR: str = "/api/v1"
+    
+    # 数据库配置
+    DB_HOST: str
+    DB_PORT: int
+    DB_USER: str
+    DB_PASSWORD: str
+    DB_NAME: str
+    
+    @property
+    def DATABASE_URL(self) -> str:
+        return f"mysql+aiomysql://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+    
+    # Redis配置
+    REDIS_URL: str = "redis://localhost:6379/0"
+    
+    # 文件路径配置
+    FILE_ROOT_PATH: str = r"C:\Users\xkjju\Desktop\tmp"
+    
+    # API URLs
+    VITE_API_BASE_URL: str = "http://localhost:8001"
+    MODEL_URL: str = "http://js1.blockelite.cn:23279/api/rag/rag_server"
+    PROCESS_URL: str = "http://js1.blockelite.cn:23279/api/file/process"
+    SEARCH_URL: str = "http://js1.blockelite.cn:23279/api/search"
+    
+    # 安全配置
+    SECRET_KEY: str
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    
+    # CORS配置
+    BACKEND_CORS_ORIGINS: List[str] = ["http://localhost:5173"]
+    
+    # 调试模式
+    DEBUG: bool = False
+    
+    # 日志配置
+    LOG_LEVEL: str = "INFO"
+    LOG_FORMAT: str = "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"
+    
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        case_sensitive=True,
+        env_file_encoding='utf-8',
+        extra='allow'
+    )
+
+settings = Settings()

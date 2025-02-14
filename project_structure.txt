@@ -1,0 +1,42 @@
+rag_backend/
+├── app/
+│   ├── api/               # API层
+│   │   ├── __init__.py
+│   │   ├── auth.py       # 认证相关API
+│   │   ├── users.py      # 用户相关API
+│   │   └── deps.py       # 依赖函数
+│   │
+│   ├── models/           # 数据模型层
+│   │   ├── __init__.py
+│   │   ├── base.py      # 基础模型
+│   │   └── user.py      # 用户模型
+│   │
+│   ├── schemas/          # 数据验证层
+│   │   ├── __init__.py
+│   │   ├── base.py      # 基础Schema
+│   │   └── user.py      # 用户Schema
+│   │
+│   ├── services/         # 业务逻辑层
+│   │   ├── __init__.py
+│   │   └── user.py      # 用户服务
+│   │
+│   ├── crud/            # 数据访问层
+│   │   ├── __init__.py
+│   │   ├── base.py     # 基础CRUD
+│   │   └── user.py     # 用户CRUD
+│   │
+│   ├── core/           # 核心配置层
+│   │   ├── __init__.py
+│   │   ├── config.py   # 配置
+│   │   ├── security.py # 安全
+│   │   └── database.py # 数据库
+│   │
+│   └── utils/          # 工具层
+│       ├── __init__.py
+│       └── common.py   # 通用工具
+│
+├── migrations/         # 数据库迁移
+├── tests/             # 测试文件
+├── .env              # 环境变量
+└── main.py           # 入口文件
+└── requirements.txt        # 依赖包 
