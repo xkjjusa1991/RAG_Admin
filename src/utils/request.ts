@@ -11,11 +11,12 @@ const service: AxiosInstance = axios.create({
 // 请求拦截器
 service.interceptors.request.use(
   (config) => {
-    // 在这里可以添加 token
-    // const token = getToken()
-    // if (token) {
-    //   config.headers['Authorization'] = `Bearer ${token}`
-    // }
+    // 从 localStorage 获取 token
+    const token = localStorage.getItem('token')
+    if (token) {
+      // 添加到请求头
+      config.headers['Authorization'] = `Bearer ${token}`
+    }
     return config
   },
   (error) => {

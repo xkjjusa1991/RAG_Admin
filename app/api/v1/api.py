@@ -9,9 +9,11 @@ Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查�
 from fastapi import APIRouter
 from app.api.users import router as users_router
 from app.api.auth import router as auth_router
+from app.api.sessions import router as sessions_router
 
 api_router = APIRouter()
 
 # 注册子路由
 api_router.include_router(auth_router, prefix="/auth", tags=["auth"])
 api_router.include_router(users_router, prefix="/users", tags=["users"])
+api_router.include_router(sessions_router, prefix="/sessions", tags=["sessions"])
