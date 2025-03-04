@@ -2,6 +2,7 @@ import json
 from typing import Optional, Any
 from app.core.redis import get_redis
 from app.core.logger import logger
+from fastapi import FastAPI, HTTPException
 
 class RedisCache:
     @staticmethod
@@ -14,6 +15,7 @@ class RedisCache:
                 json.dumps(value) if not isinstance(value, str) else value,
                 ex=expire
             )
+            logger.info(f"Set key: {key} with value: {value}")
         except Exception as e:
             logger.error(f"Redis set error: {str(e)}")
             
@@ -23,6 +25,8 @@ class RedisCache:
         redis = await get_redis()
         try:
             data = await redis.get(key)
+            print(data)
+            logger.info(f"Get key: {key} returned: {data}")
             return json.loads(data) if data else None
         except Exception as e:
             logger.error(f"Redis get error: {str(e)}")
@@ -34,6 +38,7 @@ class RedisCache:
         redis = await get_redis()
         try:
             await redis.delete(key)
+            logger.info(f"Deleted key: {key}")
         except Exception as e:
             logger.error(f"Redis delete error: {str(e)}")
 
@@ -46,5 +51,7 @@ class RedisCache:
             keys = await redis.keys(pattern)
             if keys:
                 await redis.delete(*keys)
+                logger.info(f"Cleared cache for user: {user_id}, deleted keys: {keys}")
         except Exception as e:
-            logger.error(f"Redis clear cache error: {str(e)}") 
+            logger.error(f"Redis clear cache error: {str(e)}")
+            
