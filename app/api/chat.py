@@ -2,7 +2,7 @@
 Author: xiakaijia xkjjusa1991@qq.com
 Date: 2025-03-04 12:24:10
 LastEditors: xiakaijia xkjjusa1991@qq.com
-LastEditTime: 2025-03-04 16:25:38
+LastEditTime: 2025-03-05 14:38:20
 FilePath: \RAG_Admin\app\api\chat.py
 Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 '''
@@ -18,6 +18,9 @@ from app.core.logger import logger
 from app.services.session import session_service
 from app.crud.chat import chat_crud
 from app.schemas.session import SessionCreate
+from app.crud.user_logs import user_logs_crud
+from app.schemas.user_logs import UserLogsCreate
+from datetime import datetime
 import json
 
 router = APIRouter()
@@ -47,6 +50,24 @@ async def create_chat(
         )  # 根据需要构建 session_in
         chat_request.session_id = session.session_id
         logger.info(f"Initialized new chat session with ID: {chat_request.session_id}")
+
+    # 检查 question_id 是否为空
+    if not chat_request.question_id:
+        # 创建用户日志
+        user_log = UserLogsCreate(
+            session_id=chat_request.session_id,
+            user_id=current_user.user_id,
+            query=chat_request.query,
+            answer=None,  # 初始时没有答案
+            response_segment=None,
+            score=None,
+            prompt=None,
+            like=None,
+            question_time=datetime.now()  # 使用当前时间
+        )
+        user_log_record = await user_logs_crud.create(db=db, obj_in=user_log)  # 存储用户日志
+        chat_request.question_id = str(user_log_record.question_id)  # 将 question_id 存储到 chat_request 对象中
+        logger.info(f"Created user log for question: {chat_request.query} with question_id: {chat_request.question_id}")
 
     model_input = {
         "query": chat_request.query,
