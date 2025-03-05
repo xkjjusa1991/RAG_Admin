@@ -2,7 +2,7 @@
 Author: xiakaijia xkjjusa1991@qq.com
 Date: 2025-03-05 00:45:00
 LastEditors: xiakaijia xkjjusa1991@qq.com
-LastEditTime: 2025-03-05 01:17:47
+LastEditTime: 2025-03-05 15:07:33
 FilePath: \\RAG_Admin\\app\\services\\redis_service.py
 Description: Redis 服务模块，用于存储和检索会话数据
 '''
@@ -67,10 +67,10 @@ class RedisService:
     async def append_to_session_data(self, session_id: str, user_id: str, conversations: List[Conversation]):
         key = f"session:{session_id}"
         data = await RedisCache.get(key)  # 直接调用静态方法
-
+        print(data)
         if data:
             # 如果键已存在，追加新的对话列表
-            existing_data = SessionData.parse_raw(data)
+            existing_data = SessionData.model_validate(data)  # 直接使用 model_validate 将字典转换为 SessionData 对象
             existing_data.data.extend(conversations)
             await self.store_session_data(existing_data)  # 直接调用静态方法
         else:
