@@ -4,6 +4,7 @@ from app.core.redis import get_redis
 from app.core.logger import logger
 from fastapi import FastAPI, HTTPException
 
+
 class RedisCache:
     @staticmethod
     async def set(key: str, value: Any, expire: int = 3600):

@@ -2,20 +2,19 @@
 Author: xiakaijia xkjjusa1991@qq.com
 Date: 2025-03-04 16:25:38
 LastEditors: xiakaijia xkjjusa1991@qq.com
-LastEditTime: 2025-03-04 16:35:28
+LastEditTime: 2025-03-05 13:22:14
 FilePath: \\RAG_Admin\\app\\api\\user_logs.py
 Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 '''
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.api.deps import get_user_logs_crud
 from app.schemas.user_logs import UserLogsCreate, UserLogs
 from app.crud.user_logs import user_logs_crud
 from app.core.database import get_db
 
 router = APIRouter()
 
-@router.post("/", response_model=UserLogs, summary="创建用户日志", description="创建一个新的用户日志记录。")
+@router.post("/", response_model=UserLogs, summary="创建用户聊天记录", description="创建一个新的用户聊天记录。")
 async def create_user_log(user_log: UserLogsCreate, db: AsyncSession = Depends(get_db)):
     """
     创建用户日志记录。

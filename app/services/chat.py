@@ -2,7 +2,7 @@
 Author: xiakaijia xkjjusa1991@qq.com
 Date: 2025-03-04 12:24:08
 LastEditors: xiakaijia xkjjusa1991@qq.com
-LastEditTime: 2025-03-04 13:57:06
+LastEditTime: 2025-03-05 01:23:12
 FilePath: \RAG_Admin\app\services\chat.py
 Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 '''
@@ -13,6 +13,10 @@ from app.core.logger import logger
 import aiohttp
 import json
 from app.core.config import settings
+import time
+from app.schemas.conversation import Conversation
+from app.services.redis_service import redis_service  # 导入 RedisService
+from typing import List
 
 class ChatService:
     async def create_chat(self, db: AsyncSession, obj_in: ChatCreate) -> ChatResponse:
@@ -67,10 +71,8 @@ class ChatService:
                 return await resp.json()
             
     async def fetch_streaming_data_from_model(self, model_input: dict):
+        start_time = time.time() * 1000
         data_delimiter = b"\0"  # 使用给定的分隔符
-        # model_url = str(redis_service.get_url())
-        # if not model_url:
-        #     model_url = os.getenv('MODEL_URL'),
         model_url = settings.CHAT_URL
         async with aiohttp.ClientSession() as session:
             async with session.post(model_url, json=model_input, params={'stream': 'true'}) as resp:
@@ -90,6 +92,30 @@ class ChatService:
 
                                 # 如果数据包中有 "stop" 且其值为 True，则存储会话数据
                                 if data.get("stop", True):
+                                    # 创建 user_conversation 和 assistant_conversation
+                                    user_conversation = Conversation(
+                                        question_id=model_input['session_id'],
+                                        role="user",
+                                        content=model_input['query'],
+                                        timestamp=int(start_time)  # 获取当前时间戳
+                                    )
+
+                                    assistant_conversation = Conversation(
+                                        question_id=model_input['session_id'],
+                                        role="assistant",
+                                        content=data.get("response", ""),  # 假设算法返回的内容在 "response" 字段
+                                        timestamp=int(time.time() * 1000)  # 获取当前时间戳
+                                    )
+
+                                    # 将两个对话放入数组中
+                                    conversations = [user_conversation, assistant_conversation]
+
+                                    # 调用 redis_service 的 append_to_session_data 方法
+                                    await redis_service.append_to_session_data(
+                                        session_id=model_input['session_id'],
+                                        user_id=model_input.get('user_id', 'default_user_id'),  # 根据需要提供 user_id
+                                        conversations=conversations
+                                    )
                                     return  # 结束生成器
                             except json.JSONDecodeError:
                                 print(f"Failed to decode JSON from: {part.decode('utf-8')}")

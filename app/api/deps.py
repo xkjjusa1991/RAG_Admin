@@ -10,7 +10,6 @@ from app.crud.user import user_crud
 from app.schemas.user import UserResponse
 from app.services.user import user_service
 from app.models.user import User
-from app.crud.user_logs import user_logs_crud
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
@@ -49,7 +48,4 @@ async def get_current_superuser(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="The user doesn't have enough privileges"
         )
-    return current_user
-
-async def get_user_logs_crud(db: AsyncSession = Depends(get_db)):
-    return user_logs_crud 
+    return current_user 
