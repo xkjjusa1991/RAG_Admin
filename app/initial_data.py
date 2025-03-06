@@ -1,3 +1,11 @@
+'''
+Author: xiakaijia xkjjusa1991@qq.com
+Date: 2025-02-10 14:06:43
+LastEditors: xiakaijia xkjjusa1991@qq.com
+LastEditTime: 2025-03-06 16:49:10
+FilePath: \RAG_Admin\app\initial_data.py
+Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+'''
 import asyncio
 from app.core.database import AsyncSessionLocal
 from app.services.user import user_service
