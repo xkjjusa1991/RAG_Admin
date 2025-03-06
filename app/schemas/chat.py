@@ -1,3 +1,11 @@
+'''
+Author: xiakaijia xkjjusa1991@qq.com
+Date: 2025-03-04 12:24:00
+LastEditors: xiakaijia xkjjusa1991@qq.com
+LastEditTime: 2025-03-05 15:40:19
+FilePath: \RAG_Admin\app\schemas\chat.py
+Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+'''
 from datetime import datetime
 from pydantic import BaseModel, Field
 from typing import List, Optional

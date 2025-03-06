@@ -49,7 +49,7 @@ class Settings(BaseSettings):
     VITE_API_BASE_URL: str = "http://localhost:8001"
     MODEL_URL: str = "http://172.16.0.122:8803/api/rag/rag_server"
     PROCESS_URL: str = "http://js1.blockelite.cn:23279/api/file/process"
-    SEARCH_URL: str = "http://js1.blockelite.cn:23279/api/search"
+    SEARCH_URL: str = "http://172.16.0.122:8803/api/search"
     
     # 安全配置
     SECRET_KEY: str

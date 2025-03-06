@@ -23,9 +23,9 @@ async def get_db():
     async with AsyncSessionLocal() as session:
         try:
             yield session
-            await session.commit()
+            await session.commit()  # 仅在没有异常时提交
         except Exception:
-            await session.rollback()
+            await session.rollback()  # 发生异常时回滚
             raise
         finally:
-            await session.close() 
+            await session.close()  # 确保会话关闭 
