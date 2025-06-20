@@ -2,7 +2,7 @@
 Author: xiakaijia xkjjusa1991@qq.com
 Date: 2025-02-04 01:27:27
 LastEditors: xiakaijia xkjjusa1991@qq.com
-LastEditTime: 2025-02-18 11:29:17
+LastEditTime: 2025-06-18 14:23:09
 FilePath: \RAG_Admin\main.py
 Description: 应用入口文件
 '''
@@ -18,6 +18,8 @@ from app.core.redis import init_redis_pool, redis_pool
 from app.core.database import engine
 from contextlib import asynccontextmanager
 import time
+
+LOG_PATH = "logs/app.log"  # 或你实际的日志路径
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

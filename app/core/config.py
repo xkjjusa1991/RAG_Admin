@@ -2,7 +2,7 @@
 Author: xiakaijia xkjjusa1991@qq.com
 Date: 2025-02-04 01:27:29
 LastEditors: xiakaijia xkjjusa1991@qq.com
-LastEditTime: 2025-03-04 14:05:44
+LastEditTime: 2025-03-08 23:33:06
 FilePath: \RAG_Admin\app\core\config.py
 Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 '''
@@ -47,7 +47,7 @@ class Settings(BaseSettings):
     
     # API URLs
     VITE_API_BASE_URL: str = "http://localhost:8001"
-    MODEL_URL: str = "http://172.16.0.122:8803/api/rag/rag_server"
+    MODEL_URL: str = "http://js1.blockelite.cn:17397/api/rag/rag_server"
     PROCESS_URL: str = "http://js1.blockelite.cn:23279/api/file/process"
     SEARCH_URL: str = "http://172.16.0.122:8803/api/search"
     

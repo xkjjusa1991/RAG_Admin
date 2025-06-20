@@ -15,6 +15,7 @@ from app.api.redis import router as redis_router
 from app.api.user_logs import router as user_logs_router
 from app.api.knowledge_base import router as knowledge_base_router
 from app.api.search import router as search_router
+from app.api.file import router as file_router
 
 api_router = APIRouter()
 
@@ -27,3 +28,4 @@ api_router.include_router(redis_router, prefix="/redis", tags=["redis"])
 api_router.include_router(user_logs_router, prefix="/user_logs", tags=["user_logs"])
 api_router.include_router(knowledge_base_router, prefix="/knowledge_base", tags=["knowledge_base"])
 api_router.include_router(search_router, prefix="/search", tags=["search"])
+api_router.include_router(file_router, prefix="/file", tags=["file"])
