@@ -2,7 +2,7 @@
 Author: xiakaijia xkjjusa1991@qq.com
 Date: 2025-06-18 14:23:06
 LastEditors: xiakaijia xkjjusa1991@qq.com
-LastEditTime: 2025-06-18 16:34:17
+LastEditTime: 2025-06-20 16:32:43
 FilePath: \RAG_Admin\app\api\file.py
 Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 '''
@@ -20,7 +20,8 @@ from fastapi.encoders import jsonable_encoder
 from app.schemas.response import ResponseBase
 from app.api.deps import get_current_user
 from app.models.user import User
-from app.schemas.file import FileSchema
+from app.schemas.file import FileSchema, ImportToDocumentsRequest
+from app.services.file_service import import_to_documents_service
 
 router = APIRouter()
 
@@ -57,4 +58,12 @@ async def file_delete(file_id: int = Path(...), current_user: User = Depends(get
     if not file or file.user_id != current_user.user_id:
         return ResponseBase(code=404, msg="文件不存在")
     await delete_file(db, file_id)
-    return ResponseBase(msg="删除成功") 
+    return ResponseBase(msg="删除成功")
+
+@router.post("/import_to_documents", response_model=ResponseBase, summary="批量导入file到documents表")
+async def import_to_documents(
+    body: ImportToDocumentsRequest,
+    db: Session = Depends(get_db)
+):
+    result = await import_to_documents_service(db, kb_id=body.kb_id, last_update_time=body.last_update_time, file_ids=body.file_ids)
+    return ResponseBase(msg="导入完成", data=result) 

@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 
 class FileSchema(BaseModel):
@@ -18,4 +18,9 @@ class FileSchema(BaseModel):
     ocr_language: Optional[str]
 
     class Config:
-        from_attributes = True 
+        from_attributes = True
+
+class ImportToDocumentsRequest(BaseModel):
+    kb_id: str
+    last_update_time: Optional[datetime] = None
+    file_ids: Optional[List[int]] = None 
