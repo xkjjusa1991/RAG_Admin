@@ -18,6 +18,8 @@ class ArchiveFileBaseSchema(BaseModel):
     content: Optional[str]
     last_update_time: Optional[datetime]
 
+    model_config = {"from_attributes": True}
+
 class ArchiveFileCreateSchema(ArchiveFileBaseSchema):
     pass
 
@@ -26,7 +28,6 @@ class ArchiveFileUpdateSchema(ArchiveFileBaseSchema):
 
 class ArchiveFileInDBBaseSchema(ArchiveFileBaseSchema):
     efile_id: int
-    model_config = {"from_attributes": True}
 
 class ArchiveFileSchema(ArchiveFileInDBBaseSchema):
     pass

@@ -1,19 +1,21 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional, List, Any
 from datetime import datetime
 
 class DocumentBase(BaseModel):
     document_id: str
-    file_id: Optional[int]
-    source: Optional[str]
-    status: Optional[str]
-    summary: Optional[str]
-    tags: Optional[Any]
-    upload_user: Optional[str]
-    upload_time: Optional[datetime]
-    process_time: Optional[datetime]
-    kb_id: Optional[str]
-    version: Optional[int]
+    file_id: Optional[int] = None
+    source: Optional[str] = None
+    status: Optional[str] = None
+    summary: Optional[str] = None
+    tags: Optional[Any] = None
+    upload_user: Optional[str] = None
+    upload_time: Optional[datetime] = None
+    process_time: Optional[datetime] = None
+    kb_id: Optional[str] = None
+    version: Optional[int] = 1
+
+    model_config = {"from_attributes": True}
 
 class DocumentCreate(DocumentBase):
     pass
@@ -23,8 +25,6 @@ class DocumentUpdate(DocumentBase):
 
 class DocumentInDBBase(DocumentBase):
     id: int
-    class Config:
-        orm_mode = True
 
 class Document(DocumentInDBBase):
     pass

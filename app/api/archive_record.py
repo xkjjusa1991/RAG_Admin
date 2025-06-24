@@ -2,7 +2,7 @@
 Author: xiakaijia xkjjusa1991@qq.com
 Date: 2025-06-20 13:37:20
 LastEditors: xiakaijia xkjjusa1991@qq.com
-LastEditTime: 2025-06-20 13:55:01
+LastEditTime: 2025-06-24 13:01:41
 FilePath: \\RAG_Admin\\app\\api\\archive_record.py
 Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 '''
@@ -12,12 +12,12 @@ from app.schemas.archive_record import ArchiveRecord
 from app.schemas.archive_file import ArchiveFileSchema
 from app.crud.crud_archive_record import crud_archive_record
 from app.core.database import get_db
-from app.schemas.response import ResponseBase
+from app.schemas.response import ResponseBase, PageResponse, PageInfo
 from typing import List
 
 router = APIRouter()
 
-@router.get("/", response_model=ResponseBase[List[ArchiveRecord]], summary="获取归档记录列表")
+@router.get("/", response_model=PageResponse[List[ArchiveRecord]], summary="获取归档记录列表")
 async def list_records(
     page: int = Query(1, ge=1, description="页码，从1开始"),
     limit: int = Query(20, ge=1, description="每页数量"),
@@ -25,8 +25,11 @@ async def list_records(
 ):
     """分页获取归档记录列表"""
     skip = (page - 1) * limit
-    records = await crud_archive_record.get_multi(db, skip=skip, limit=limit)
-    return ResponseBase(data=records)
+    orm_records = await crud_archive_record.get_multi(db, skip=skip, limit=limit)
+    records = [ArchiveRecord.model_validate(item) for item in orm_records]
+    total = await crud_archive_record.count(db) if hasattr(crud_archive_record, 'count') else len(records)
+    page_info = PageInfo(total=total, page=page, size=limit)
+    return PageResponse[List[ArchiveRecord]](data=records, page_info=page_info)
 
 @router.get("/{record_id}", response_model=ResponseBase[ArchiveRecord], summary="获取归档记录详情")
 async def get_record(record_id: int, db: AsyncSession = Depends(get_db)):
