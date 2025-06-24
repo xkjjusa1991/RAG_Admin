@@ -3,6 +3,7 @@ from app.schemas.knowledge_base import KnowledgeBaseCreateSchema, KnowledgeBaseU
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import func
+import uuid
 
 class CRUDKnowledgeBase:
     async def get(self, db: AsyncSession, kb_id: str):
@@ -18,7 +19,10 @@ class CRUDKnowledgeBase:
         return result.scalar_one()
 
     async def create(self, db: AsyncSession, obj_in: KnowledgeBaseCreateSchema):
-        db_obj = KnowledgeBase(**obj_in.model_dump())
+        db_obj = KnowledgeBase(
+            kb_id=str(uuid.uuid4()),
+            **obj_in.model_dump()
+        )
         db.add(db_obj)
         await db.commit()
         await db.refresh(db_obj)

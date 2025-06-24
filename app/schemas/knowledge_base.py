@@ -16,7 +16,6 @@ class KnowledgeBaseSchema(BaseModel):
     model_config = {"from_attributes": True}
 
 class KnowledgeBaseCreateSchema(BaseModel):
-    kb_id: str
     kb_name: str
     name: str
     description: Optional[str] = None
