@@ -21,6 +21,7 @@ from app.crud.crud_document import crud_document
 from app.core.database import get_db
 from typing import List
 from app.schemas.response import PageResponse, PageInfo
+import math
 
 router = APIRouter()
 
@@ -30,7 +31,9 @@ async def list_documents(page: int = 1, limit: int = 20, db: AsyncSession = Depe
     orm_items = await crud_document.get_multi(db, skip=offset, limit=limit)
     items = [Document.model_validate(item) for item in orm_items]
     total = await crud_document.count(db) if hasattr(crud_document, 'count') else len(items)
-    page_info = PageInfo(total=total, page=page, size=limit)
+    total_pages = math.ceil(total / limit) if limit else 1
+    count = len(items)
+    page_info = PageInfo(total_pages=total_pages, page=page, size=limit, count=count)
     return PageResponse[List[Document]](data=items, page_info=page_info)
 
 @router.get("/{id}", response_model=Document)

@@ -2,8 +2,7 @@ from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime
 
-class FileSchema(BaseModel):
-    id: Optional[int]
+class FileBaseSchema(BaseModel):
     file_name: str
     upload_time: datetime
     file_size: int
@@ -17,6 +16,11 @@ class FileSchema(BaseModel):
     ocr_engine: Optional[str]
     ocr_language: Optional[str]
 
+class FileCreateSchema(FileBaseSchema):
+    pass
+
+class FileSchema(FileBaseSchema):
+    id: int
     class Config:
         from_attributes = True
 

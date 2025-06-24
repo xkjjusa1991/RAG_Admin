@@ -14,6 +14,7 @@ from app.crud.crud_archive_record import crud_archive_record
 from app.core.database import get_db
 from app.schemas.response import ResponseBase, PageResponse, PageInfo
 from typing import List
+import math
 
 router = APIRouter()
 
@@ -28,7 +29,9 @@ async def list_records(
     orm_records = await crud_archive_record.get_multi(db, skip=skip, limit=limit)
     records = [ArchiveRecord.model_validate(item) for item in orm_records]
     total = await crud_archive_record.count(db) if hasattr(crud_archive_record, 'count') else len(records)
-    page_info = PageInfo(total=total, page=page, size=limit)
+    total_pages = math.ceil(total / limit) if limit else 1
+    count = len(records)
+    page_info = PageInfo(total_pages=total_pages, page=page, size=limit, count=count)
     return PageResponse[List[ArchiveRecord]](data=records, page_info=page_info)
 
 @router.get("/{record_id}", response_model=ResponseBase[ArchiveRecord], summary="获取归档记录详情")

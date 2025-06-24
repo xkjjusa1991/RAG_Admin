@@ -8,6 +8,7 @@ Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查�
 '''
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy import func
 from app.models.archive_file import ArchiveFile
 from app.schemas.archive_file import ArchiveFileCreateSchema, ArchiveFileUpdateSchema
 
@@ -41,5 +42,9 @@ class CRUDArchiveFile:
             await db.delete(obj)
             await db.commit()
         return obj
+
+    async def count(self, db: AsyncSession):
+        result = await db.execute(select(func.count()).select_from(ArchiveFile))
+        return result.scalar_one()
 
 crud_archive_file = CRUDArchiveFile() 

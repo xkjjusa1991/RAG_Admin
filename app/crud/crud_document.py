@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy import func
 from app.models.document import Document
 from app.schemas.document import DocumentCreate, DocumentUpdate
 
@@ -33,5 +34,9 @@ class CRUDDocument:
             await db.delete(obj)
             await db.commit()
         return obj
+
+    async def count(self, db: AsyncSession):
+        result = await db.execute(select(func.count()).select_from(Document))
+        return result.scalar_one()
 
 crud_document = CRUDDocument() 

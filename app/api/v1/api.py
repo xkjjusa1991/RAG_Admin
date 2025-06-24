@@ -19,6 +19,7 @@ from app.api.file import router as file_router
 from app.api import document as document_api
 from app.api import archive_file as archive_file_api
 from app.api import archive_record as archive_record_api
+from app.api.knowledge_base import router as knowledge_base_router
 
 api_router = APIRouter()
 
@@ -35,3 +36,4 @@ api_router.include_router(file_router, prefix="/file", tags=["file"])
 api_router.include_router(document_api.router, prefix="/documents", tags=["documents"])
 api_router.include_router(archive_file_api.router, prefix="/archive_files", tags=["archive_files"])
 api_router.include_router(archive_record_api.router, prefix="/archive_records", tags=["archive_records"])
+api_router.include_router(knowledge_base_router, prefix="/knowledge_base", tags=["knowledge_base"])

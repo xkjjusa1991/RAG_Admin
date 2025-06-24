@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy import func
 from app.models.archive_record import ArchiveRecord
 from app.models.archive_file import ArchiveFile
 from app.schemas.archive_record import ArchiveRecordCreate, ArchiveRecordUpdate
@@ -38,5 +39,9 @@ class CRUDArchiveRecord:
     async def get_files_by_record_id(self, db: AsyncSession, record_id: int):
         result = await db.execute(select(ArchiveFile).where(ArchiveFile.record_id == record_id))
         return result.scalars().all()
+
+    async def count(self, db: AsyncSession):
+        result = await db.execute(select(func.count()).select_from(ArchiveRecord))
+        return result.scalar_one()
 
 crud_archive_record = CRUDArchiveRecord() 

@@ -2,7 +2,7 @@
 Author: xiakaijia xkjjusa1991@qq.com
 Date: 2025-06-20 13:37:34
 LastEditors: xiakaijia xkjjusa1991@qq.com
-LastEditTime: 2025-06-24 12:51:07
+LastEditTime: 2025-06-24 16:23:36
 FilePath: \RAG_Admin\app\api\archive_file.py
 Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 '''
@@ -21,6 +21,7 @@ from datetime import datetime
 import uuid
 from app.services.archive_file_service import import_to_documents_service
 from pydantic import BaseModel
+import math
 
 router = APIRouter()
 
@@ -35,7 +36,9 @@ async def list_files(
     orm_files = await crud_archive_file.get_multi(db, skip=skip, limit=limit)
     files = [ArchiveFileSchema.model_validate(item) for item in orm_files]
     total = await crud_archive_file.count(db) if hasattr(crud_archive_file, 'count') else len(files)
-    page_info = PageInfo(total=total, page=page, size=limit)
+    total_pages = math.ceil(total / limit) if limit else 1
+    count = len(files)
+    page_info = PageInfo(total_pages=total_pages, page=page, size=limit, count=count)
     return PageResponse[List[ArchiveFileSchema]](data=files, page_info=page_info)
 
 @router.get("/{efile_id}", response_model=ResponseBase[ArchiveFileSchema], summary="获取归档文件详情")

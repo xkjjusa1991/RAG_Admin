@@ -19,9 +19,10 @@ class ResponseBase(BaseModel, Generic[T]):
 
 
 class PageInfo(BaseModel):
-    total: int = 0
+    total_pages: int = 1
     page: int = 1
     size: int = 10
+    count: int = 0
 
 
 class PageResponse(ResponseBase[T]):

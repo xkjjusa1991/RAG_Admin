@@ -2,7 +2,7 @@
 Author: xiakaijia xkjjusa1991@qq.com
 Date: 2025-06-18 14:24:22
 LastEditors: xiakaijia xkjjusa1991@qq.com
-LastEditTime: 2025-06-20 12:09:11
+LastEditTime: 2025-06-24 16:37:27
 FilePath: \RAG_Admin\app\services\file.py
 Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 '''
@@ -13,8 +13,10 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.file import File as FileModel
-from sqlalchemy import select
+from sqlalchemy import select, func
 from app.core.config import settings
+from app.crud.crud_file import crud_file
+from app.schemas.file import FileCreateSchema
 
 
 async def get_file_list(db, skip: int = 0, limit: int = 20):
@@ -50,15 +52,12 @@ async def save_upload_file(file, user_id: str, db: AsyncSession):
         "file_metadata": None,
         "file_path": file_path,
         "ocr_text": None,
-        "ocr_status": None,
+        "ocr_status": "pending",
         "ocr_time": None,
         "ocr_engine": None,
         "ocr_language": None,
     }
 
-    db_file = FileModel(**file_info)
-    db.add(db_file)
-    await db.commit()
-    await db.refresh(db_file)
-    print("db_file.id:", db_file.id)
-    return db_file 
+    file_to_create = FileCreateSchema(**file_info)
+    db_file = await crud_file.create(db, obj_in=file_to_create)
+    return db_file
