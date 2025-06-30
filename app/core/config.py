@@ -2,7 +2,7 @@
 Author: xiakaijia xkjjusa1991@qq.com
 Date: 2025-02-04 01:27:29
 LastEditors: xiakaijia xkjjusa1991@qq.com
-LastEditTime: 2025-03-08 23:33:06
+LastEditTime: 2025-06-27 12:13:54
 FilePath: \RAG_Admin\app\core\config.py
 Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 '''
@@ -68,6 +68,13 @@ class Settings(BaseSettings):
     
     # 聊天接口配置
     CHAT_URL: str = MODEL_URL
+    
+    # MinerU输出路径配置
+    MINERU_MD_DIR: str = r"C:/Users/xkjju/Desktop/mineru/output"
+    MINERU_IMAGE_DIR: str = r"C:/Users/xkjju/Desktop/mineru/output/images"
+    
+    # MinerU图片绝对路径前缀（用于客户端访问图片，建议填写完整域名+静态路径前缀，如：http://yourdomain/static/mineru）
+    MINERU_IMAGE_URL_PREFIX: str = "http://yourdomain.com/static/mineru"
     
     model_config = SettingsConfigDict(
         env_file=".env",

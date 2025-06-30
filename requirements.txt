@@ -15,3 +15,4 @@ pydantic-settings
 redis>=4.2.0
 httpx
 aiohttp
+mineru==2.0.6
